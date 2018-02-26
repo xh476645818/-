@@ -1,0 +1,23 @@
+{
+  "scripts": {
+    "start": "node server.js",
+    "list": "node ./modules/list.js",
+    "art": "node ./modules/article.js",
+    "test": "node ./modules/test.js"
+  },
+  "name": "",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.2",
+    "fs": "0.0.1-security",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "async": "^2.6.0",
+    "bufferhelper": "^0.2.1",
+    "iconv-lite": "^0.4.19",
+    "jquery": "^3.3.1",
+    "request": "^2.83.0"
+  },
+  "version": ""
+}
