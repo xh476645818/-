@@ -7,11 +7,12 @@
 ## 正式运行
 
 打开工程根目录book.config.js文件，这个文件是用来设置爬小说的源数据;
-const book = {
-    'url': 'http://www.wutuxs.com/html/4/4041/',//这是小说的目录页
-    'href': 'http://www.wutuxs.com',//这是小说的目录页
-    'name': '修真聊天群',//设定保存的书名
-    'listDom': '#at tr td a',//小说列表的内容html结构
-    'artTitle': '#amain dd h1',//每一篇的标题html结构
-    'artContent': '#contents'//每一篇的内容html结构
+
+const book = {<br />
+    'url': 'http://www.wutuxs.com/html/4/4041/',//这是小说的目录页<br />
+    'href': 'http://www.wutuxs.com',//这是小说的目录页<br />
+    'name': '修真聊天群',//设定保存的书名<br />
+    'listDom': '#at tr td a',//小说列表的内容html结构<br />
+    'artTitle': '#amain dd h1',//每一篇的标题html结构<br />
+    'artContent': '#contents'//每一篇的内容html结构<br />
 };
