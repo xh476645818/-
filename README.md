@@ -16,3 +16,7 @@ const book = {<br />
     'artTitle': '#amain dd h1',//每一篇的标题html结构<br />
     'artContent': '#contents'//每一篇的内容html结构<br />
 };
+在工程根目录打开控制端命令界面
+执行npm run list，获取小说目录
+执行npm run art，获取小说每一篇文章内容
+然后等着就好了
