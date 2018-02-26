@@ -8,5 +8,5 @@ const book = {
     'listDom': '#at tr td a',
     'artTitle': '#amain dd h1',
     'artContent': '#contents'
-}
+};
 module.exports = book;
