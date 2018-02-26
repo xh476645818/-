@@ -1,7 +1,7 @@
 /**
  * Created by xiaohe on 2018/2/25.
  */
-//这个文档没啥用，忽略就行；
+//这个文档没啥用，忽略就行。。。
 var request = require('request');
 var fs = require('fs');
 var cheerio = require('cheerio');
