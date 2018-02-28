@@ -11,12 +11,16 @@ var book = require('../book.config');
 https.get(book.url, function (res,req) {
     var buffer = new BufferHelper();
     res.on('data', function (data) {
+        console.log('正在读取目录');
         buffer.concat(data);
     });
     res.on('end', function () {
+        console.log('正在写入目录');
         var ListData = iconv.decode(buffer.toBuffer(), 'gb2312');
         List(ListData);
     });
+}).on('error', function () {
+    console.warn('完蛋了')
 })
 
 function List(data) {
