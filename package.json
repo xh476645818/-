@@ -19,5 +19,6 @@
     "jquery": "^3.3.1",
     "request": "^2.83.0"
   },
+  "description": "其实就是为了用iRead听小说，自己弄了一个小说的爬虫,使用这个脚本需要稍微知道一点html结构和node命令就行;",
   "version": ""
 }
