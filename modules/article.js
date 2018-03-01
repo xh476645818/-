@@ -49,7 +49,7 @@ function GetUrl(index) {
                     this.bookname = '\uFEFF' + $(book.artTitle).eq(index - book.index).text().replace(/[\s\r\n\b]/g, "") + '\n';
                     this.content = '\uFEFF' + $(book.artContent).eq(index - book.index).text().replace(/[\s\r\n\b]/g, "") + '\n';
                     console.log('正在写入', this.bookname, index);
-                    resultBook += this.bookname /*+ this.content*/;
+                    resultBook += this.bookname+ this.content;
                     fs.writeFileSync('./book/' + book.name + '.txt', resultBook, 'utf-8')
                     index++;
                     GetUrl(index);
