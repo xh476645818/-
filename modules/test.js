@@ -13,17 +13,4 @@ var option = {
     path: '/id48783/2',
     method: 'GET'
 };
-var buffer = new BufferHelper();
-http.request(option, function (res) {
-    res.on('data', function (data) {
-        buffer.concat(data);
-    });
-    res.on('end', function () {
-        console.log('请求结束');
-        var $ = cheerio.load(buffer.toBuffer());
-        console.log($('#list').text());
-        fs.writeFile('./book/xxx.txt', $('#list').text(), 'utf-8');
-    })
-}).on('error', function () {
-    console.log('我可能出错了')
-}).end();
+fs.mkdir(' D:\\work\',0777,function (err2) {  })
