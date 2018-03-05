@@ -12,7 +12,7 @@ var iconv = require('iconv-lite');
 var BufferHelper = require('bufferhelper');
 var resultBook = '';
 var bookList;
-fs.readFile('./data/list.json', 'utf-8', function (err, data) {
+fs.readFile('./data/' + book.name + '.json', 'utf-8', function (err, data) {
     this.data = data.trim();
     this.data = JSON.parse(this.data);
     bookList = this.data.result;
@@ -35,12 +35,12 @@ function GetUrl(index) {
     }
     request.get(bookList[index].url, function (res, req) {
         // console.log(index + '准备执行');
-        console.log(res.statusCode);
+        console.log('请求状态', res.statusCode);
         switch (res.statusCode) {
             case 200:
                 res.on('data', function (data) {
                     //进行了一次buffer拼接
-                    console.log('正在读取', index)
+                    // console.log('正在读取', index)
                     buffer.concat(data);
                 });
                 res.on('end', function () {
@@ -52,7 +52,7 @@ function GetUrl(index) {
                         xmlMode: false,
                         decodeEntities: true
                     });
-                    this.bookname = '\uFEFF' + $(book.artTitle).eq(index - book.index).text().replace(/[\s\r\n\b]/g, "") + '\n';
+                    this.bookname = '\uFEFF' + $(book.artTitle).eq(index - book.index).text().trim() + '\n';
                     this.content = '\uFEFF' + $(book.artContent).eq(index - book.index).text().replace(/[\s\r\n\b]/g, "") + '\n';
                     console.log('正在写入', this.bookname, index);
                     resultBook += this.bookname + this.content;
@@ -62,14 +62,16 @@ function GetUrl(index) {
                 })
                 break;
             default:
-                console.log('出错了', res.statusCode);
+                console.log('出错了', res.statusCode, '开始进行重新连接');
+                GetUrl(index);
                 break;
-        }
-
+        };
     }).on('error', function () {
-        // GetUrl(index);
-        debugger;
-        console.warn('完蛋了')
+        setTimeout(function () {
+            console.warn('完蛋了', index, '开始进行重新连接');
+            GetUrl(index);
+        }, 2000)
+
     });
 
 }
