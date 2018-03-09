@@ -24,7 +24,7 @@ var buffer = new BufferHelper();
                 });
                 res.on('end', function () {
                     console.log('正在写入目录');
-                    var ListData = iconv.decode(buffer.toBuffer(), 'gb2312');
+                    var ListData = iconv.decode(buffer.toBuffer(), book.charset);
                     List(ListData);
                 });
                 break;
@@ -49,7 +49,8 @@ function List(data) {
     var $ = cheerio.load(this.data);
     var list = $(book.listDom);
     for (let i = 0; i < list.length; i++) {
-        this.list.push('{' + '"name":' + '"' + list.eq(i).text() + '",'
+        this.list.push('{' + '"index":' + i + ','
+            + '"name":' + '"' + list.eq(i).text() + '",'
             + '"url":' + '"' + book.href + list.eq(i).attr('href') + '"' + '}')
     }
     var result = '{' + '"result":' + '[' + this.list + ']' + '}';

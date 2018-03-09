@@ -27,15 +27,18 @@ fs.readFile('./data/' + book.name + '.json', 'utf-8', function (err, data) {
 var buffer = new BufferHelper();
 //chreeio声明用;
 var $;
+var timerIndex = 0;
 
 function GetUrl(index) {
     if (index >= bookList.length) {
         console.log('写入完毕，请在book文件夹下查阅');
         return true;
     }
-    request.get(bookList[index].url, function (res, req) {
+    ;
+    var requestObjdect = request.get(bookList[index].url, function (res) {
         // console.log(index + '准备执行');
-        console.log('请求状态', res.statusCode);
+        // console.log('请求状态', res.statusCode);
+        // res.destroy();
         switch (res.statusCode) {
             case 200:
                 res.on('data', function (data) {
@@ -45,7 +48,7 @@ function GetUrl(index) {
                 });
                 res.on('end', function () {
                     //buffer对中文的转译
-                    var BookData = iconv.decode(buffer.toBuffer(), 'gb2312');
+                    var BookData = iconv.decode(buffer.toBuffer(), book.charset);
                     $ = cheerio.load(BookData, {
                         withDomLvl1: true,
                         normalizeWhitespace: false,
@@ -54,23 +57,43 @@ function GetUrl(index) {
                     });
                     this.bookname = '\uFEFF' + $(book.artTitle).eq(index - book.index).text().trim() + '\n';
                     this.content = '\uFEFF' + $(book.artContent).eq(index - book.index).text().replace(/[\s\r\n\b]/g, "") + '\n';
-                    console.log('正在写入', this.bookname, index);
+                    console.log('正在写入', index, this.bookname);
                     resultBook += this.bookname + this.content;
                     fs.writeFileSync('./book/' + book.name + '.txt', resultBook, 'utf-8')
                     index++;
                     GetUrl(index);
-                })
+                });
                 break;
             default:
-                console.log('出错了', res.statusCode, '开始进行重新连接');
-                GetUrl(index);
+                if (timerIndex >= 5) {
+                    timerIndex = 0;
+                    requestObjdect.on('close', function () {
+                        console.log('关闭请求');
+                    });
+                    return;
+                }
+                timerIndex++
+                clearTimeout(timer)
+                var timer = setTimeout(function () {
+                    console.log('状态吗出错', res.statusCode, '5s后开始进行第', timerIndex, '次重新连接');
+                    GetUrl(index);
+                }, 5000)
                 break;
-        };
-    }).on('error', function () {
+        }
+        ;
+    });
+    requestObjdect.on('error', function () {
+        if (timerIndex >= 5) {
+            timerIndex = 0;
+            requestObjdect.on('close', function () {
+                console.log('关闭请求');
+            });
+            return;
+        }
         setTimeout(function () {
-            console.warn('完蛋了', index, '开始进行重新连接');
+            console.log('出错了', index, '5s后开始进行第', timerIndex, '次重新连接');
             GetUrl(index);
-        }, 2000)
+        }, 5000)
 
     });
 
