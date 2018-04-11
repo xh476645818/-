@@ -3,15 +3,21 @@
  */
 //导入基本信息
 var book = require('../book.config');
+//判断目标路径是http或是https
 var request = require('https');
 if (book.url.split('://')[0] === 'http') {
     request = require('http');
-}
-var cheerio = require('cheerio');
+};
+//fs node中的文件系统
 var fs = require('fs');
+//dom结构获取
+var cheerio = require('cheerio');
+//buffer的第三方，使buffer更好用
 var BufferHelper = require('bufferhelper');
+//解决中文乱码问题 gb2312等
 var iconv = require('iconv-lite');
 
+//实例化buffer类;
 var buffer = new BufferHelper();
 (function getList() {
     request.get(book.url, function (res, req) {
@@ -43,6 +49,7 @@ var buffer = new BufferHelper();
     })
 })()
 
+//读取列表的方法
 function List(data) {
     this.data = data;
     this.list = [];

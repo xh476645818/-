@@ -1,44 +1,51 @@
 /**
  * Created by xiaohe on 2018/2/19.
  */
+//导入基本信息
 var book = require('../book.config.js');
+//判断目标路径是http或是https
 var request = require('https');
 if (book.url.split('://')[0] === 'http') {
     request = require('http');
 }
+//fs node中的文件系统
 var fs = require('fs');
+//dom结构获取
 var cheerio = require('cheerio');
-var iconv = require('iconv-lite');
+//buffer的第三方，使buffer更好用
 var BufferHelper = require('bufferhelper');
+//解决中文乱码问题 gb2312等
+var iconv = require('iconv-lite');
+
 var resultBook = '';
-var bookList;
 fs.readFile('./data/' + book.name + '.json', 'utf-8', function (err, data) {
     this.data = data.trim();
     this.data = JSON.parse(this.data);
-    bookList = this.data.result;
+    //
+    var bookList = this.data.result;
+    console.log(bookList);
+    //判断是否存在book文件夹
     fs.stat('book', function (err, stats) {
         //如果报错了，就建一个book
         if (err) {
             fs.mkdirSync('book');
         }
     });
-    GetUrl(book.index)
+    GetUrl(book.index,bookList)
 });
 var buffer = new BufferHelper();
 //chreeio声明用;
 var $;
 var timerIndex = 0;
-
-function GetUrl(index) {
+function GetUrl(index,bookList) {
+    console.log(index,'代表被调用')
     if (index >= bookList.length) {
         console.log('写入完毕，请在book文件夹下查阅');
         return true;
     }
     ;
     var requestObjdect = request.get(bookList[index].url, function (res) {
-        // console.log(index + '准备执行');
-        // console.log('请求状态', res.statusCode);
-        // res.destroy();
+        console.log('请求状态', res.statusCode);
         switch (res.statusCode) {
             case 200:
                 res.on('data', function (data) {
@@ -61,7 +68,7 @@ function GetUrl(index) {
                     resultBook += this.bookname + this.content;
                     fs.writeFileSync('./book/' + book.name + '.txt', resultBook, 'utf-8')
                     index++;
-                    GetUrl(index);
+                    GetUrl(index,bookList);
                 });
                 break;
             default:
@@ -76,7 +83,7 @@ function GetUrl(index) {
                 clearTimeout(timer)
                 var timer = setTimeout(function () {
                     console.log('状态吗出错', res.statusCode, '5s后开始进行第', timerIndex, '次重新连接');
-                    GetUrl(index);
+                    GetUrl(index,bookList);
                 }, 5000)
                 break;
         }
@@ -92,7 +99,7 @@ function GetUrl(index) {
         }
         setTimeout(function () {
             console.log('出错了', index, '5s后开始进行第', timerIndex, '次重新连接');
-            GetUrl(index);
+            GetUrl(index,bookList);
         }, 5000)
 
     });
