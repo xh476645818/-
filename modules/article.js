@@ -62,8 +62,8 @@ function GetUrl(index,bookList) {
                         xmlMode: false,
                         decodeEntities: true
                     });
-                    this.bookname = '\uFEFF' + $(book.artTitle).eq(index - book.index).text().trim() + '\n';
-                    this.content = '\uFEFF' + $(book.artContent).eq(index - book.index).text().replace(/[\s\r\n\b]/g, "") + '\n';
+                    this.bookname = '\r\uFEFF' + $(book.artTitle).eq(index - book.index).text().trim()+'\n';
+                    this.content = '\r\uFEFF' + $(book.artContent).eq(index - book.index).text().replace(/[\s\r\n\b]/g, "") + '\n';
                     console.log('正在写入', index, this.bookname);
                     resultBook += this.bookname + this.content;
                     fs.writeFileSync('./book/' + book.name + '.txt', resultBook, 'utf-8')
